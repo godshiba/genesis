@@ -1,0 +1,53 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/g7-session-guard.sh",
+            "timeout": 15,
+            "statusMessage": "GENESIS G7 session gate"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/g2-commit-reminder.sh",
+            "timeout": 10,
+            "statusMessage": "GENESIS G2 validation reminder"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/g1-registration-nudge.sh",
+            "timeout": 10,
+            "statusMessage": "GENESIS G1 registration check"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/g3-todo-nudge.sh",
+            "timeout": 10,
+            "statusMessage": "GENESIS G3 issue check"
+          }
+        ]
+      }
+    ]
+  }
+}

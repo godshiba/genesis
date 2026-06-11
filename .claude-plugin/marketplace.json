@@ -1,0 +1,15 @@
+{
+  "name": "godshiba",
+  "description": "Plugins by godshiba. Home of GENESIS, a project operating system for Claude Code.",
+  "owner": {
+    "name": "godshiba"
+  },
+  "plugins": [
+    {
+      "name": "genesis",
+      "source": "./plugins/genesis",
+      "description": "A project operating system for Claude Code: per-project registries, seven hard gates, and a prep protocol that makes any project resumable by any session.",
+      "category": "workflow"
+    }
+  ]
+}

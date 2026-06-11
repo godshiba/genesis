@@ -1,0 +1,13 @@
+{
+  "name": "genesis",
+  "displayName": "GENESIS",
+  "version": "1.0.0",
+  "description": "A project operating system for Claude Code. Bootstrap any project with a prep protocol (interrogate, investigate, architect, phase), then keep it honest with per-project registries (files, issues, decisions, landmines, session log, roadmap) and seven hard gates enforced by skills and hooks.",
+  "author": {
+    "name": "godshiba",
+    "url": "https://github.com/godshiba"
+  },
+  "repository": "https://github.com/godshiba/genesis",
+  "license": "MIT",
+  "keywords": ["workflow", "architecture", "registry", "gates", "planning", "session-continuity"]
+}

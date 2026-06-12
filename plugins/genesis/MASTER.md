@@ -42,9 +42,12 @@ LAYER 2 — TEMPLATES     templates/ in the plugin:
 
 LAYER 3 — AUTOMATION    the plugin's skills, agents, and hooks.
                         /genesis:init — prep protocol (greenfield or retrofit)
+                        /genesis:docs — doc curation: inventory, absorb,
+                          reorganize existing documentation (approval-gated)
                         /genesis:gate-check, :close, :landmine, :decision,
                           :issue, :learn — the daily habit loop
-                        gate-auditor, genesis-architect — delegable agents
+                        gate-auditor, genesis-architect, doc-curator —
+                          delegable agents
                         hooks — G7 guard (blocks) + session-resume loader,
                           G1/G3 nudges, G2 commit reminder + config guard
 ```

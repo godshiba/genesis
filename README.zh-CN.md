@@ -46,7 +46,11 @@ GENESIS 同时消除这两种税。项目知识存放在比任何会话都长寿
 并把构建划分为带验收门禁的阶段。
 
 已有仓库：它读取而不是提问 — 从 manifest 读技术栈、从脚本读命令、从 git
-读历史 — 在现有基础上改造。它绝不会未经批准覆盖已有的 CLAUDE.md。
+读历史 — 在现有基础上改造。它绝不会未经批准覆盖已有的 CLAUDE.md。如果仓库里
+已经堆了一摊零散的文档，`/genesis:docs` 会来收拾：逐一清点并分类每个文档，
+把决策记录和踩坑笔记吸收进登记簿，把文件移动、合并成清晰的结构，对照代码
+标记过时的内容，并依据代码补写缺失的文档 — 一切先以迁移计划的形式呈给你
+审批，通过后以一个可回滚的提交执行。
 
 输出：一份量身定制的 `CLAUDE.md`（150 行以内），含项目不变量、行为准则、
 门禁，以及项目的永久记忆：
@@ -133,8 +137,8 @@ plugins/genesis/
 ├── MASTER.md            信条 — 每个组件存在的理由
 ├── ANALYSIS.md          GENESIS 提炼自的六项目尸检报告
 ├── templates/           CLAUDE.template.md + 六个登记簿骨架
-├── skills/              init, gate-check, close, landmine, decision, issue, learn
-├── agents/              gate-auditor, genesis-architect
+├── skills/              init, docs, gate-check, close, landmine, decision, issue, learn
+├── agents/              gate-auditor, genesis-architect, doc-curator
 └── hooks/               G7 会话卫兵（阻断）+ 会话恢复加载器,
                          G1/G3 提醒, G2 提交提醒 + 配置卫兵
 EXAMPLES.md              端到端的真实生成输出

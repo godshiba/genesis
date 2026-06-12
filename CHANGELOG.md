@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.2.0 — 2026-06-12
+
+The doc curation release.
+
+Added:
+
+- **`/genesis:docs` skill + `doc-curator` agent.** Reorganizes existing
+  documentation: inventories and classifies every doc, absorbs
+  registry-shaped knowledge (decision records, gotcha notes, TODO lists)
+  into the GENESIS registries, moves/merges files into a clean structure,
+  flags claims that contradict the code, and writes missing docs from code
+  evidence. Everything is presented as a migration plan behind an approval
+  gate and executed as a single revertible commit via `git mv`. Knowledge is
+  never lost: deletion only for junk or fully-absorbed sources.
+- `/genesis:init` now offers the curation protocol when retrofitting a repo
+  that carries more than a handful of doc files.
+
 ## 1.1.0 — 2026-06-12
 
 The resume-loop and conduct release. Researched against

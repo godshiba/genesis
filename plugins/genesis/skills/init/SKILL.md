@@ -24,7 +24,11 @@ Inspect the working directory first:
   pyproject.toml, go.mod, Makefile), derive the dependency graph from imports,
   and mine git history plus existing docs for landmines and decisions already
   paid for. Then run only the steps with gaps (usually Interrogate's
-  out-of-scope question and Phase).
+  out-of-scope question and Phase). If the repo carries more than a handful
+  of doc files, offer the `/genesis:docs` curation protocol as part of the
+  retrofit — it inventories every doc, absorbs registry-shaped knowledge
+  (decisions, gotchas, TODO lists) into the new registries, and reorganizes
+  the rest behind an approval gate.
 - **Already has a CLAUDE.md**: do not overwrite. Read it, map its content onto
   the template slots, propose a migration diff, and get approval first.
 

@@ -54,6 +54,12 @@ dependency contract, and phases the build with acceptance gates.
 
 On an existing repo it reads instead of asking — stack from manifests,
 commands from scripts, history from git — and retrofits around what is there.
+If the repo already carries scattered documentation, `/genesis:docs` curates
+it: every doc inventoried and classified, decision records and gotcha notes
+absorbed into the registries, files moved or merged into a clean structure,
+stale claims flagged against the code, missing docs written from code
+evidence — all presented as a migration plan you approve first, executed as
+one revertible commit.
 
 The output: a tailored `CLAUDE.md` (under 150 lines) with project invariants,
 a conduct section, the gates, and the project's permanent memory:
@@ -145,8 +151,8 @@ plugins/genesis/
 ├── MASTER.md            the doctrine — why each piece exists
 ├── ANALYSIS.md          the six-project autopsy GENESIS was distilled from
 ├── templates/           CLAUDE.template.md + the six registry skeletons
-├── skills/              init, gate-check, close, landmine, decision, issue, learn
-├── agents/              gate-auditor, genesis-architect
+├── skills/              init, docs, gate-check, close, landmine, decision, issue, learn
+├── agents/              gate-auditor, genesis-architect, doc-curator
 └── hooks/               G7 session guard (blocking) + session-resume loader,
                          G1/G3 nudges, G2 commit reminder + config guard
 EXAMPLES.md              real generated output, end to end

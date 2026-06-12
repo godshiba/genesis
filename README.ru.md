@@ -1,5 +1,7 @@
 [English](./README.md) | [中文](./README.zh-CN.md) | Русский
 
+[![CI](https://github.com/godshiba/genesis/actions/workflows/ci.yml/badge.svg)](https://github.com/godshiba/genesis/actions/workflows/ci.yml)
+
 # GENESIS
 
 Операционная система проектов для Claude Code. Вся доктрина — в одной фразе:
@@ -96,6 +98,7 @@ GENESIS закрывает обе дыры. Знания проекта лежа
 | `/genesis:landmine` | Только что потеряли десять минут на ровном месте |
 | `/genesis:decision` | Выбрали один вариант из нескольких настоящих |
 | `/genesis:issue` | Багу не место в TODO-комментарии |
+| `/genesis:status` | В любой момент — сводка на один экран: фаза, баги, последняя передача |
 | `/genesis:gate-check` | Перед коммитом — прогон всех семи гейтов |
 | `/genesis:close` | Конец сессии — записать передачу дел |
 | `/genesis:learn` | После релиза — вернуть выводы в систему |
@@ -167,10 +170,12 @@ plugins/genesis/
 ├── MASTER.md            доктрина — зачем существует каждая часть
 ├── ANALYSIS.md          разбор шести проектов, из которых вырос GENESIS
 ├── templates/           CLAUDE.template.md + шесть скелетов реестров
-├── skills/              init, docs, gate-check, close, landmine, decision, issue, learn
+├── skills/              init, docs, status, gate-check, close, landmine,
+│                        decision, issue, learn
 ├── agents/              gate-auditor, genesis-architect, doc-curator
 └── hooks/               страж сессии G7 (блокирующий) + загрузчик возобновления,
                          подсказки G1/G3, напоминание G2 + страж конфигов
+tests/run.sh             тесты хуков (26 сценариев, гоняются в CI)
 EXAMPLES.md              реальный результат генерации, от и до
 CHANGELOG.md             история версий
 ```

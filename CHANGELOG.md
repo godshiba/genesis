@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.3.0 — 2026-06-12
+
+The trust release: mechanical beats instructional, applied to the plugin
+itself.
+
+Added:
+
+- **Hook test suite** (`tests/run.sh`) — 26 scenarios covering all six hook
+  scripts: blocking, nudging, loop prevention, and the fail-open guarantees
+  (silent outside GENESIS projects).
+- **CI** (GitHub Actions) — runs the hook tests, strict plugin/marketplace
+  validation via the Claude Code CLI, and frontmatter/JSON structure checks
+  on every push and pull request. Badge in the README.
+- **`/genesis:status`** — read-only one-screen dashboard: current phase and
+  next task, open issues by severity, last handoff age, registry sizes, tree
+  state. Orientation in seconds; verification stays in gate-check.
+- Tagged releases: v1.0.0 through v1.3.0 now exist as git tags with GitHub
+  Releases.
+
 ## 1.2.0 — 2026-06-12
 
 The doc curation release.

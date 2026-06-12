@@ -1,5 +1,7 @@
 English | [中文](./README.zh-CN.md) | [Русский](./README.ru.md)
 
+[![CI](https://github.com/godshiba/genesis/actions/workflows/ci.yml/badge.svg)](https://github.com/godshiba/genesis/actions/workflows/ci.yml)
+
 # GENESIS
 
 A project operating system for Claude Code. One doctrine: **what isn't
@@ -90,6 +92,7 @@ Capture costs five seconds, so it actually happens:
 | `/genesis:landmine` | Something just cost you ten confused minutes |
 | `/genesis:decision` | You chose between real alternatives |
 | `/genesis:issue` | A bug or deferral should not live in a TODO comment |
+| `/genesis:status` | Any moment — one-screen dashboard: phase, issues, last handoff |
 | `/genesis:gate-check` | Before a commit — audits all seven gates |
 | `/genesis:close` | Ending a session — writes the handoff |
 | `/genesis:learn` | After shipping — fold lessons back into the system |
@@ -157,10 +160,12 @@ plugins/genesis/
 ├── MASTER.md            the doctrine — why each piece exists
 ├── ANALYSIS.md          the six-project autopsy GENESIS was distilled from
 ├── templates/           CLAUDE.template.md + the six registry skeletons
-├── skills/              init, docs, gate-check, close, landmine, decision, issue, learn
+├── skills/              init, docs, status, gate-check, close, landmine,
+│                        decision, issue, learn
 ├── agents/              gate-auditor, genesis-architect, doc-curator
 └── hooks/               G7 session guard (blocking) + session-resume loader,
                          G1/G3 nudges, G2 commit reminder + config guard
+tests/run.sh             hook test suite (26 scenarios, runs in CI)
 EXAMPLES.md              real generated output, end to end
 CHANGELOG.md             release history
 ```

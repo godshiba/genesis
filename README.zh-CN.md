@@ -1,5 +1,7 @@
 [English](./README.md) | 中文 | [Русский](./README.ru.md)
 
+[![CI](https://github.com/godshiba/genesis/actions/workflows/ci.yml/badge.svg)](https://github.com/godshiba/genesis/actions/workflows/ci.yml)
+
 # GENESIS
 
 Claude Code 的项目操作系统。唯一信条：**未登记的事物不存在。**
@@ -82,6 +84,7 @@ GENESIS 同时消除这两种税。项目知识存放在比任何会话都长寿
 | `/genesis:landmine` | 刚刚被一个坑白白耗掉十分钟 |
 | `/genesis:decision` | 你在真实的备选方案之间做了选择 |
 | `/genesis:issue` | 一个 bug 或推迟项不该活在 TODO 注释里 |
+| `/genesis:status` | 任何时候 — 一屏看清现状：阶段、问题、上次交接 |
 | `/genesis:gate-check` | 提交前 — 审计全部七道门禁 |
 | `/genesis:close` | 结束会话 — 写交接记录 |
 | `/genesis:learn` | 上线后 — 把经验沉淀回系统 |
@@ -142,10 +145,12 @@ plugins/genesis/
 ├── MASTER.md            信条 — 每个组件存在的理由
 ├── ANALYSIS.md          GENESIS 提炼自的六项目尸检报告
 ├── templates/           CLAUDE.template.md + 六个登记簿骨架
-├── skills/              init, docs, gate-check, close, landmine, decision, issue, learn
+├── skills/              init, docs, status, gate-check, close, landmine,
+│                        decision, issue, learn
 ├── agents/              gate-auditor, genesis-architect, doc-curator
 └── hooks/               G7 会话卫兵（阻断）+ 会话恢复加载器,
                          G1/G3 提醒, G2 提交提醒 + 配置卫兵
+tests/run.sh             钩子测试套件（26 个场景，在 CI 中运行）
 EXAMPLES.md              端到端的真实生成输出
 CHANGELOG.md             版本历史
 ```

@@ -44,6 +44,7 @@ LAYER 3 — AUTOMATION    the plugin's skills, agents, and hooks.
                         /genesis:init — prep protocol (greenfield or retrofit)
                         /genesis:docs — doc curation: inventory, absorb,
                           reorganize existing documentation (approval-gated)
+                        /genesis:status — one-screen project dashboard
                         /genesis:gate-check, :close, :landmine, :decision,
                           :issue, :learn — the daily habit loop
                         gate-auditor, genesis-architect, doc-curator —

@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  hook-tests:
+    name: Hook test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run hook tests
+        run: bash tests/run.sh
+
+  validate:
+    name: Plugin validation (strict)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Validate marketplace manifest
+        run: claude plugin validate . --strict
+      - name: Validate plugin manifest
+        run: claude plugin validate ./plugins/genesis --strict
+
+  structure:
+    name: Frontmatter and JSON checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check skill and agent frontmatter
+        run: |
+          python3 - <<'EOF'
+          import glob, json, sys
+          bad = []
+          for f in glob.glob('plugins/genesis/skills/*/SKILL.md') + glob.glob('plugins/genesis/agents/*.md'):
+              t = open(f).read()
+              if not t.startswith('---'):
+                  bad.append(f + ': no frontmatter'); continue
+              fm = t.split('---')[1]
+              for field in ('name:', 'description:'):
+                  if field not in fm:
+                      bad.append(f + ': missing ' + field)
+          json.load(open('plugins/genesis/hooks/hooks.json'))
+          json.load(open('plugins/genesis/.claude-plugin/plugin.json'))
+          json.load(open('.claude-plugin/marketplace.json'))
+          if bad:
+              print('\n'.join(bad)); sys.exit(1)
+          print('frontmatter and JSON ok')
+          EOF

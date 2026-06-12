@@ -14,8 +14,13 @@ Claude Code 的项目操作系统。唯一信条：**未登记的事物不存在
 
 ## 安装
 
+请逐条执行（这是两条独立的命令 — 粘贴成一行会导致 URL 解析失败）：
+
 ```text
 /plugin marketplace add godshiba/genesis
+```
+
+```text
 /plugin install genesis@godshiba
 ```
 

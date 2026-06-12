@@ -18,8 +18,14 @@ Distilled from six real shipped projects — the full evidence record is in
 
 ## Install
 
+Run these one at a time (each is a separate command — pasting both on one
+line breaks the URL):
+
 ```text
 /plugin marketplace add godshiba/genesis
+```
+
+```text
 /plugin install genesis@godshiba
 ```
 

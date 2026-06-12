@@ -1,3 +1,5 @@
+English | [中文](./README.zh-CN.md) | [Русский](./README.ru.md)
+
 # GENESIS
 
 A project operating system for Claude Code. One doctrine: **what isn't

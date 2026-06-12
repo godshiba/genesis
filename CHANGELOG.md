@@ -27,6 +27,8 @@ Added:
 Changed:
 
 - README restructured: install-first, summary up top, example linked.
+- README translations added: Chinese (README.zh-CN.md) and Russian
+  (README.ru.md), with a language switcher on all three.
 
 ## 1.0.0 — 2026-06-11
 

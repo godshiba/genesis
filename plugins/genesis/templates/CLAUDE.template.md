@@ -35,6 +35,22 @@ Keep this file under ~150 lines — deep content links out, registries hold memo
 
 {{TWO_TO_FIVE_RECURRING_OPERATIONS_AS_REAL_CODE_SNIPPETS}}
 
+## Conduct — how to work on any task
+
+Derived from Karpathy's LLM-pitfall guidelines, wired into the gates:
+
+1. **Surface assumptions before coding.** If multiple interpretations exist,
+   present them — never pick silently. An assumption that shaped the approach
+   is a decision: record it (G6).
+2. **Simplicity first.** Minimum code that solves the problem. No speculative
+   abstractions, no unrequested flexibility. If 200 lines could be 50, rewrite.
+3. **Surgical diffs.** Every changed line traces to the request. Do not
+   "improve" adjacent code; remove only orphans your own change created.
+   This is also what keeps the doc-sync map (G4) honest.
+4. **Goal-driven steps.** Every task states its verify check up front and runs
+   it — G2 as behavior, not ceremony. "Fix the bug" means "write the failing
+   test, then make it pass."
+
 ---
 
 ## Registries — the project's memory

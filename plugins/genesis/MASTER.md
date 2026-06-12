@@ -45,7 +45,8 @@ LAYER 3 — AUTOMATION    the plugin's skills, agents, and hooks.
                         /genesis:gate-check, :close, :landmine, :decision,
                           :issue, :learn — the daily habit loop
                         gate-auditor, genesis-architect — delegable agents
-                        hooks — G7 guard (blocks), G1/G3 nudges, G2 reminder
+                        hooks — G7 guard (blocks) + session-resume loader,
+                          G1/G3 nudges, G2 commit reminder + config guard
 ```
 
 The split matters: doctrine changes rarely, templates evolve as you learn,
@@ -94,6 +95,17 @@ Each gate gets the strongest enforcement its nature allows — three classes:
 All hooks fail open: outside a GENESIS project (no `docs/registry/`), or on a
 machine missing git or python3, they are silent. The plugin is a shell over
 Claude Code's existing architecture, never a replacement for it.
+
+### The conduct layer
+
+Gates govern artifacts; they say nothing about how to behave while producing
+them. Every generated CLAUDE.md therefore carries a four-rule Conduct section
+(derived from Karpathy's LLM-pitfall guidelines, adapted to the gates):
+surface assumptions before coding (an assumption that shaped the approach is a
+G6 decision), simplicity first, surgical diffs (every changed line traces to
+the request — which is what keeps G4 honest), and goal-driven steps (each task
+names its verify check up front — G2 as behavior). Gates catch what conduct
+misses; conduct prevents what gates would catch.
 
 ---
 
@@ -202,7 +214,9 @@ integrate and reconcile drift.
 - Never leave a broken tree or half-finished commit hoping to come back.
   Complete it or revert it.
 - Resume protocol: SESSION_LOG.md (most recent entry) then ROADMAP.md (first
-  unchecked task). That pair is the whole handoff.
+  unchecked task). That pair is the whole handoff — and the session-resume
+  hook injects it automatically at session start, so the loop closes without
+  relying on anyone remembering to read.
 
 ---
 

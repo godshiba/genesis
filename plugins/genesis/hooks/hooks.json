@@ -1,5 +1,17 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/g7-session-resume.sh",
+            "timeout": 10,
+            "statusMessage": "GENESIS G7 resume loader"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
@@ -45,6 +57,12 @@
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/g3-todo-nudge.sh",
             "timeout": 10,
             "statusMessage": "GENESIS G3 issue check"
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/g2-config-guard.sh",
+            "timeout": 10,
+            "statusMessage": "GENESIS G2 config guard"
           }
         ]
       }

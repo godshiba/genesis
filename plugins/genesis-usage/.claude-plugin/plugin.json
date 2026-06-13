@@ -1,7 +1,7 @@
 {
   "name": "genesis-usage",
   "displayName": "GENESIS Usage Sensor",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A usage sensor, not a HUD. Reads Claude Code's subscriber rate_limits (5-hour and 7-day) on stdin and, when you near a cap with a reset still far off, recommends or auto-triggers /genesis:close so a session ends with a clean handoff instead of a hard cutoff. Ships an optional one-line statusline readout. Fails open for API users.",
   "author": {
     "name": "godshiba",

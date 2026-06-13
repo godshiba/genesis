@@ -9,7 +9,9 @@ The sensor works out of the box; this makes it yours. It writes choices into
 `~/.claude/settings.json` so you never hand-edit JSON or memorize an env var.
 
 If the user passed a number as an argument (e.g. `/genesis-usage:setup 80`),
-treat it as the desired 5-hour cap and skip straight to writing it.
+treat it as the 5-hour cap - but still show the weekly cap (default 85) so it is
+never set silently. A second number sets the weekly cap too
+(`/genesis-usage:setup 80 75`).
 
 ## 1. Check eligibility first (be honest)
 
@@ -21,23 +23,30 @@ will not make data appear.
 
 ## 2. Ask what they want (one short round)
 
-Confirm or collect, with current values shown if already set:
+Show every setting's current value (or its default) and let the user keep or
+change it - never leave a setting at a default the user never saw. Both caps are
+first-class; present them as a pair:
 
-- **Cap** - the 5-hour usage %% that triggers (default 90). Offer the 7-day cap
-  too (default 85); most people only set the 5-hour one.
+- **5-hour cap** - usage %% that triggers the warning (default 90).
+- **7-day (weekly) cap** - usage %% that triggers the weekly warning (default 85).
 - **Mode** - `advise` (warn in the terminal, default), `enforce` (block the
   turn so Claude runs `/genesis:close`), or `off`.
 - **Desktop notification** - `on`/`off` (default off). When on, the sensor also
   posts a macOS notification, useful when you are working in another app.
 - **Statusline** - whether to add the one-line readout (see step 4).
 
-Do not over-ask: if they said "trigger at 80", set the 5-hour cap to 80, leave
-everything else default, and move on.
+Keep it to one round: present all five with their current values, take the
+answers, done. Efficient is fine - silent is not. Even when the user only cares
+about the 5-hour cap, show the weekly cap's value so it is a visible choice, not
+a hidden default.
 
 ## 3. Write the config
 
 Merge into `~/.claude/settings.json` under `"env"` (create the block if absent;
-preserve anything already there). Only write keys that differ from the default:
+preserve anything already there). **Write both caps the user confirmed - even if
+a value equals the default - so each is visible and editable, never silent.** For
+mode, notify, and grace, write only what differs from the default to keep the
+block tidy:
 
 ```json
 {

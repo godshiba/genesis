@@ -1,5 +1,15 @@
 # Changelog — genesis-usage
 
+## 0.3.1 — 2026-06-13
+
+Fixed:
+
+- `/genesis-usage:setup` now treats the **weekly (7-day) cap as a first-class
+  prompt** and writes both caps explicitly. Previously it framed the weekly cap
+  as optional and left it at the default 85 without showing it, so it looked
+  "silently set". A second argument sets it directly too:
+  `/genesis-usage:setup 80 75`.
+
 ## 0.3.0 — 2026-06-13
 
 Added:

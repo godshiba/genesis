@@ -26,8 +26,10 @@ jobs:
         run: npm install -g @anthropic-ai/claude-code
       - name: Validate marketplace manifest
         run: claude plugin validate . --strict
-      - name: Validate plugin manifest
+      - name: Validate plugin manifest (genesis)
         run: claude plugin validate ./plugins/genesis --strict
+      - name: Validate plugin manifest (genesis-usage)
+        run: claude plugin validate ./plugins/genesis-usage --strict
 
   structure:
     name: Frontmatter and JSON checks
@@ -39,7 +41,10 @@ jobs:
           python3 - <<'EOF'
           import glob, json, sys
           bad = []
-          for f in glob.glob('plugins/genesis/skills/*/SKILL.md') + glob.glob('plugins/genesis/agents/*.md'):
+          skills = (glob.glob('plugins/genesis/skills/*/SKILL.md')
+                    + glob.glob('plugins/genesis/agents/*.md')
+                    + glob.glob('plugins/genesis-usage/skills/*/SKILL.md'))
+          for f in skills:
               t = open(f).read()
               if not t.startswith('---'):
                   bad.append(f + ': no frontmatter'); continue
@@ -49,6 +54,8 @@ jobs:
                       bad.append(f + ': missing ' + field)
           json.load(open('plugins/genesis/hooks/hooks.json'))
           json.load(open('plugins/genesis/.claude-plugin/plugin.json'))
+          json.load(open('plugins/genesis-usage/hooks/hooks.json'))
+          json.load(open('plugins/genesis-usage/.claude-plugin/plugin.json'))
           json.load(open('.claude-plugin/marketplace.json'))
           if bad:
               print('\n'.join(bad)); sys.exit(1)

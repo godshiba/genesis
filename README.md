@@ -184,10 +184,25 @@ plugins/genesis/
 └── hooks/               G7 session guard (blocking) + session-resume loader +
                          pre-compaction snapshot, G1/G3 nudges,
                          G2 commit reminder + config guard
-tests/run.sh             hook test suite (30 scenarios, runs in CI)
+plugins/genesis-usage/   companion plugin (see below)
+tests/run.sh             hook test suite (37 scenarios, runs in CI)
 EXAMPLES.md              real generated output, end to end
 CHANGELOG.md             release history
 ```
+
+## Companion: genesis-usage
+
+A separate, optional plugin in this marketplace — a usage **sensor, not a HUD**.
+It reads Claude Code's subscriber `rate_limits` (5-hour and 7-day) on stdin and,
+when you near a cap with a reset still far off, recommends or auto-triggers
+`/genesis:close` so a session ends with a clean handoff instead of a hard
+cutoff. It is the trigger half of the G7 emergency close. Install separately:
+
+```text
+/plugin install genesis-usage@godshiba
+```
+
+Details in [plugins/genesis-usage/README.md](./plugins/genesis-usage/README.md).
 
 ## License
 

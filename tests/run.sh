@@ -7,6 +7,7 @@ set -u
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SCRIPTS="$ROOT/plugins/genesis/hooks/scripts"
+USCRIPTS="$ROOT/plugins/genesis-usage/hooks/scripts"
 PASS=0
 FAIL=0
 
@@ -26,6 +27,10 @@ check() { # name expected_exit actual_exit haystack needle
 
 run() { # script json -> sets OUT and RC (stdout+stderr combined)
   OUT=$(printf '%s' "$2" | "$SCRIPTS/$1" 2>&1); RC=$?
+}
+
+urun() { # genesis-usage script json -> sets OUT and RC (stdout+stderr combined)
+  OUT=$(printf '%s' "$2" | "$USCRIPTS/$1" 2>&1); RC=$?
 }
 
 genesis_fixture() { # creates a GENESIS git repo, echoes its path
@@ -142,6 +147,29 @@ printf '# Pre-compaction snapshot\n\n- Branch: main\n- HEAD: abc123 wip\n' > "$T
 run g7-session-resume.sh "{\"cwd\":\"$T\",\"hook_event_name\":\"SessionStart\"}"
 check "resume surfaces pre-compaction snapshot" 0 $RC "$OUT" "Pre-compaction snapshot present"
 rm -rf "$T"
+
+echo "== usage-sensor (genesis-usage) =="
+FAR=9999999999
+T=$(genesis_fixture)
+urun usage-sensor.sh "{\"cwd\":\"$T\",\"session_id\":\"s-below\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":40,\"resets_at\":$FAR}}}"
+check "usage sensor silent below threshold" 0 $RC "$OUT" ""
+[ -z "$OUT" ] || { echo "FAIL  usage sensor should be silent below threshold"; FAIL=$((FAIL+1)); PASS=$((PASS-1)); }
+urun usage-sensor.sh "{\"cwd\":\"$T\",\"session_id\":\"s-adv\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":95,\"resets_at\":$FAR}}}"
+check "usage sensor advises near 5h cap (recommends /genesis:close)" 0 $RC "$OUT" "/genesis:close"
+urun usage-sensor.sh "{\"cwd\":\"$T\",\"session_id\":\"s-adv\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":95,\"resets_at\":$FAR}}}"
+check "usage sensor throttles repeat in same bucket" 0 $RC "$OUT" ""
+[ -z "$OUT" ] || { echo "FAIL  usage sensor should throttle repeat in same bucket"; FAIL=$((FAIL+1)); PASS=$((PASS-1)); }
+OUT=$(printf '%s' "{\"cwd\":\"$T\",\"session_id\":\"s-enf\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":96,\"resets_at\":$FAR}}}" | GENESIS_USAGE_MODE=enforce "$USCRIPTS/usage-sensor.sh" 2>&1); RC=$?
+check "usage sensor enforce blocks the stop" 2 $RC "$OUT" "/genesis:close"
+OUT=$(printf '%s' "{\"cwd\":\"$T\",\"session_id\":\"s-enf2\",\"stop_hook_active\":true,\"rate_limits\":{\"five_hour\":{\"used_percentage\":96,\"resets_at\":$FAR}}}" | GENESIS_USAGE_MODE=enforce "$USCRIPTS/usage-sensor.sh" 2>&1); RC=$?
+check "usage sensor enforce respects stop loop guard" 0 $RC "$OUT" ""
+urun usage-sensor.sh "{\"cwd\":\"$T\",\"session_id\":\"s-nodata\"}"
+check "usage sensor silent without rate_limits (API users)" 0 $RC "$OUT" ""
+rm -rf "$T"
+P=$(mktemp -d)
+urun usage-sensor.sh "{\"cwd\":\"$P\",\"session_id\":\"s-plain\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":97,\"resets_at\":$FAR}}}"
+check "usage sensor advises generically outside GENESIS" 0 $RC "$OUT" "wrap up"
+rm -rf "$P"
 
 echo
 echo "passed: $PASS  failed: $FAIL"

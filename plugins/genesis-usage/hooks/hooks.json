@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/usage-sensor.sh",
+            "timeout": 10,
+            "statusMessage": "GENESIS usage sensor"
+          }
+        ]
+      }
+    ]
+  }
+}

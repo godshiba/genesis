@@ -10,6 +10,12 @@
       "source": "./plugins/genesis",
       "description": "A project operating system for Claude Code: per-project registries, seven hard gates, and a prep protocol that makes any project resumable by any session.",
       "category": "workflow"
+    },
+    {
+      "name": "genesis-usage",
+      "source": "./plugins/genesis-usage",
+      "description": "A usage sensor, not a HUD: reads Claude Code's subscriber rate_limits and recommends or auto-triggers /genesis:close before a 5-hour or weekly cutoff strands your work.",
+      "category": "workflow"
     }
   ]
 }

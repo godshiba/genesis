@@ -1,3 +1,5 @@
+English | [中文](./README.zh-CN.md) | [Русский](./README.ru.md)
+
 # GENESIS Usage Sensor
 
 A **sensor, not a HUD.** It stays quiet until you are about to hit a Claude Code

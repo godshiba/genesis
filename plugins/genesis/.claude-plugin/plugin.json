@@ -1,7 +1,7 @@
 {
   "name": "genesis",
   "displayName": "GENESIS",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A project operating system for Claude Code. Bootstrap any project with a prep protocol (interrogate, investigate, architect, phase), then keep it honest with per-project registries (files, issues, decisions, landmines, session log, roadmap) and seven hard gates enforced by skills and hooks.",
   "author": {
     "name": "godshiba",

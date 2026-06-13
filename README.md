@@ -149,6 +149,29 @@ A session ends two ways, and the loop covers both:
   next session (after the reset) resumes from the handoff instead of stranded,
   unrecorded work.
 
+## Configuration
+
+GENESIS ships with teeth on by default — but every gate has an intensity dial,
+so you tune it instead of uninstalling it. Set these as environment variables:
+**globally** in `~/.claude/settings.json` under `"env"`, or **per-project** in a
+repo's `.claude/settings.json` (which overrides the global value there).
+
+| Variable | Values | Default | Controls |
+|----------|--------|---------|----------|
+| `GENESIS_G7` | `on` / `warn` / `off` | `on` | Session gate. `on` blocks a turn that changed code without a `SESSION_LOG` entry; `warn` advises instead. |
+| `GENESIS_G1` | `on` / `warn` / `off` | `on` | Unregistered-file nudge. |
+| `GENESIS_G3` | `on` / `warn` / `off` | `on` | Orphan TODO/FIXME nudge. |
+| `GENESIS_G2_CONFIG` | `on` / `warn` / `off` | `on` | Quality-config guard (editing eslint/vitest/etc.). |
+| `GENESIS_G2` | `on` / `off` | `on` | Pre-commit validation reminder. |
+| `GENESIS_PRECOMPACT` | `on` / `off` | `on` | Pre-compaction snapshot. |
+| `GENESIS_RESUME` | `on` / `off` | `on` | Session-resume context loader. |
+| `GENESIS_OFF` | `1` | unset | Master kill switch — silences every GENESIS hook. |
+
+`warn` keeps the same message but never blocks or interrupts (exit 0). Defaults
+preserve the full doctrine; dialing a gate down is a deliberate choice — and
+recording *why* in `DECISIONS.md` is the G6 gate doing its job. The companion
+**genesis-usage** plugin has its own knobs (cap, mode, notifications).
+
 ## Who this is for
 
 **New to Claude Code:** install, run `/genesis:init`, answer the questions.
@@ -185,7 +208,7 @@ plugins/genesis/
                          pre-compaction snapshot, G1/G3 nudges,
                          G2 commit reminder + config guard
 plugins/genesis-usage/   companion plugin (see below)
-tests/run.sh             hook test suite (37 scenarios, runs in CI)
+tests/run.sh             hook test suite (42 scenarios, runs in CI)
 EXAMPLES.md              real generated output, end to end
 CHANGELOG.md             release history
 ```

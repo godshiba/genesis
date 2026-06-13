@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.5.0 — 2026-06-13
+
+The tunability release. Every gate now has an intensity dial; defaults are
+unchanged, so existing installs behave identically until you choose otherwise.
+
+Added:
+
+- **Per-gate enforcement modes.** Each hook reads an env var: `GENESIS_G7`,
+  `GENESIS_G1`, `GENESIS_G3`, `GENESIS_G2_CONFIG` take `on` (default — the
+  current block/nudge), `warn` (advise to stderr, never block), or `off`.
+  `GENESIS_G2` (commit reminder), `GENESIS_PRECOMPACT` (snapshot), and
+  `GENESIS_RESUME` (resume loader) take `on`/`off`.
+- **Master kill switch** `GENESIS_OFF=1` silences every GENESIS hook at once.
+- Defaults preserve 1.4.0 behavior exactly. Dialing a gate down is a deliberate
+  choice — and itself a G6 decision worth recording. Set it per-project in that
+  repo's `.claude/settings.json` `env`, or globally in `~/.claude/settings.json`.
+
+Changed:
+
+- Test suite now isolates hook state in a throwaway TMPDIR and clears `GENESIS_*`
+  env for determinism; expanded to 42 scenarios (mode dials + kill switch).
+- README gains a Configuration section and a newcomer on-ramp.
+
 ## 1.4.0 — 2026-06-13
 
 The cutoff-survival release. Completes the G7 loop for both ways a session

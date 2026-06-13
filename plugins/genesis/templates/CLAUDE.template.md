@@ -76,6 +76,10 @@ Live in `docs/registry/`. **What isn't registered doesn't exist.**
 6. **G6 Decision** — non-obvious choices appended to DECISIONS.md.
 7. **G7 Session** — SESSION_LOG.md updated before ending work.
 
+_Gates enforce by default. They can be dialed to `warn`/`off` per-project via
+`GENESIS_*` env vars (see the genesis plugin README) — a deliberate change worth
+a DECISIONS.md entry (G6)._
+
 ## Doc-Sync Map (G4)
 
 | Changed | Update |

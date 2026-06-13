@@ -8,6 +8,9 @@
 # Fails open.
 set -u
 
+# Global kill switch: GENESIS_OFF=1 silences every GENESIS hook.
+[ "${GENESIS_OFF:-}" = "1" ] && exit 0
+
 command -v python3 >/dev/null 2>&1 || exit 0
 
 input=$(cat 2>/dev/null) || exit 0
@@ -42,5 +45,8 @@ cwd=$(printf '%s\n' "$result" | sed -n 1p)
 [ -f "$cwd/docs/registry/ISSUES.md" ] || exit 0
 
 markers=$(printf '%s\n' "$result" | sed 1d)
+mode="${GENESIS_G3:-on}"
+[ "$mode" = "off" ] && exit 0
 echo "G3 issue gate (GENESIS): new TODO/FIXME marker(s) without an ISS- reference: $markers -- register the problem in docs/registry/ISSUES.md (/genesis:issue) and cite the id, e.g. TODO(ISS-NNN)." >&2
+[ "$mode" = "warn" ] && exit 0
 exit 2

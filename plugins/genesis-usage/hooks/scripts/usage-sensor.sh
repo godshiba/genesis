@@ -15,12 +15,15 @@
 # without python3, without rate_limits (API users), or on any parse error.
 set -u
 
+# Global kill switch: GENESIS_OFF=1 silences every GENESIS hook.
+[ "${GENESIS_OFF:-}" = "1" ] && exit 0
+
 command -v python3 >/dev/null 2>&1 || exit 0
 
 input=$(cat 2>/dev/null) || exit 0
 
 tok=$(printf '%s' "$input" | python3 -c '
-import json, os, sys, time, tempfile, hashlib
+import json, os, sys, time, tempfile, hashlib, shutil, subprocess
 
 def num(x):
     try:
@@ -110,6 +113,17 @@ else:
 enforce = (mode == "enforce") and is_genesis
 if enforce and stop_active:
     print("NONE"); sys.exit(0)
+
+notify = os.environ.get("GENESIS_USAGE_NOTIFY", "off").strip().lower() in ("on", "1", "true")
+if notify and shutil.which("osascript"):
+    body = head.replace("\"", "\x27").replace("\\", "")
+    try:
+        subprocess.run(
+            ["osascript", "-e",
+             "display notification \"" + body + "\" with title \"GENESIS usage\""],
+            capture_output=True, timeout=3)
+    except Exception:
+        pass
 
 sys.stderr.write(head + " " + action + "\n")
 print("BLOCK" if enforce else "ADVISE")

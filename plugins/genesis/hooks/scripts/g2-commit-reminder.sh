@@ -8,6 +8,10 @@
 # matters. Fails open (silent).
 set -u
 
+# Global kill switch + G2 toggle (GENESIS_OFF=1, or GENESIS_G2=off).
+[ "${GENESIS_OFF:-}" = "1" ] && exit 0
+[ "${GENESIS_G2:-on}" = "off" ] && exit 0
+
 command -v python3 >/dev/null 2>&1 || exit 0
 
 input=$(cat 2>/dev/null) || exit 0

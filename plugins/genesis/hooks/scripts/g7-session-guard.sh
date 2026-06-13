@@ -7,6 +7,9 @@
 # allows the stop rather than trapping the user.
 set -u
 
+# Global kill switch: GENESIS_OFF=1 silences every GENESIS hook.
+[ "${GENESIS_OFF:-}" = "1" ] && exit 0
+
 command -v python3 >/dev/null 2>&1 || exit 0
 command -v git >/dev/null 2>&1 || exit 0
 
@@ -45,5 +48,8 @@ work=$(printf '%s\n' "$dirty" | grep -v ' docs/registry/' | grep -c .) || work=0
 # Allow if the session log itself is among the uncommitted changes.
 printf '%s\n' "$dirty" | grep -qF "$log_rel" && exit 0
 
+mode="${GENESIS_G7:-on}"
+[ "$mode" = "off" ] && exit 0
 echo "G7 session gate (GENESIS): the working tree has uncommitted changes but $log_rel has no new entry. Append one (what changed, repo state, next concrete step) - /genesis:close does this properly - then finish." >&2
+[ "$mode" = "warn" ] && exit 0
 exit 2

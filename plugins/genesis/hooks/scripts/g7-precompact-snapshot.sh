@@ -14,6 +14,10 @@
 # or without git/python3 it is silent.
 set -u
 
+# Global kill switch + snapshot toggle (GENESIS_OFF=1, or GENESIS_PRECOMPACT=off).
+[ "${GENESIS_OFF:-}" = "1" ] && exit 0
+[ "${GENESIS_PRECOMPACT:-on}" = "off" ] && exit 0
+
 command -v python3 >/dev/null 2>&1 || exit 0
 command -v git >/dev/null 2>&1 || exit 0
 

@@ -1,5 +1,24 @@
 # Changelog — genesis-usage
 
+## 0.2.0 — 2026-06-13
+
+Tunability and reach.
+
+Added:
+
+- **Interactive `/genesis-usage:setup`.** Asks for the cap (5h/7d), mode, and
+  notifications, then writes them into `settings.json` — no hand-editing JSON or
+  memorizing env vars. `/genesis-usage:setup 80` sets the 5-hour cap directly.
+- **Desktop notifications.** `GENESIS_USAGE_NOTIFY=on` posts a macOS notification
+  when the sensor fires — an at-a-glance alert when you are working in another
+  app, without a menu-bar app. Skipped silently where unsupported.
+- Honors the global `GENESIS_OFF=1` kill switch.
+
+Changed:
+
+- README rewritten dual-audience (newcomer quickstart + full config reference +
+  troubleshooting).
+
 ## 0.1.0 — 2026-06-13
 
 Initial release. The trigger half of the GENESIS G7 emergency close.

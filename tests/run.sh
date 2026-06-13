@@ -11,6 +11,18 @@ USCRIPTS="$ROOT/plugins/genesis-usage/hooks/scripts"
 PASS=0
 FAIL=0
 
+# Determinism: clear any GENESIS_* config the host shell may export, so default
+# behavior is what we assert unless a test sets a variable explicitly.
+unset GENESIS_OFF GENESIS_G1 GENESIS_G2 GENESIS_G3 GENESIS_G2_CONFIG GENESIS_G7 \
+      GENESIS_PRECOMPACT GENESIS_RESUME GENESIS_USAGE_MODE GENESIS_USAGE_THRESHOLD \
+      GENESIS_USAGE_WEEK_THRESHOLD GENESIS_USAGE_GRACE_SECS GENESIS_USAGE_NOTIFY 2>/dev/null || true
+
+# Isolate hook state: the usage sensor writes per-session throttle files to
+# TMPDIR. A throwaway TMPDIR keeps runs repeatable and never touches the host's
+# real session state.
+export TMPDIR="$(mktemp -d)"
+trap 'rm -rf "$TMPDIR"' EXIT
+
 check() { # name expected_exit actual_exit haystack needle
   local name="$1" want="$2" got="$3" out="$4" needle="$5"
   if [ "$got" != "$want" ]; then
@@ -170,6 +182,26 @@ P=$(mktemp -d)
 urun usage-sensor.sh "{\"cwd\":\"$P\",\"session_id\":\"s-plain\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":97,\"resets_at\":$FAR}}}"
 check "usage sensor advises generically outside GENESIS" 0 $RC "$OUT" "wrap up"
 rm -rf "$P"
+
+echo "== gate config (modes + kill switch) =="
+T=$(genesis_fixture); echo change > "$T/src/new.txt"
+OUT=$(printf '%s' "{\"cwd\":\"$T\",\"stop_hook_active\":false}" | GENESIS_G7=warn "$SCRIPTS/g7-session-guard.sh" 2>&1); RC=$?
+check "G7 warn advises without blocking (exit 0)" 0 $RC "$OUT" "G7 session gate"
+OUT=$(printf '%s' "{\"cwd\":\"$T\",\"stop_hook_active\":false}" | GENESIS_G7=off "$SCRIPTS/g7-session-guard.sh" 2>&1); RC=$?
+check "G7 off is silent" 0 $RC "$OUT" ""
+[ -z "$OUT" ] || { echo "FAIL  G7 off should print nothing"; FAIL=$((FAIL+1)); PASS=$((PASS-1)); }
+OUT=$(printf '%s' "{\"cwd\":\"$T\",\"stop_hook_active\":false}" | GENESIS_OFF=1 "$SCRIPTS/g7-session-guard.sh" 2>&1); RC=$?
+check "GENESIS_OFF kill switch silences G7" 0 $RC "$OUT" ""
+[ -z "$OUT" ] || { echo "FAIL  GENESIS_OFF should silence G7"; FAIL=$((FAIL+1)); PASS=$((PASS-1)); }
+rm -rf "$T"
+T=$(genesis_fixture)
+OUT=$(printf '%s' "{\"cwd\":\"$T\",\"tool_input\":{\"file_path\":\"$T/src/new-thing.ts\"}}" | GENESIS_G1=warn "$SCRIPTS/g1-registration-nudge.sh" 2>&1); RC=$?
+check "G1 warn advises without exit 2" 0 $RC "$OUT" "G1 registration gate"
+rm -rf "$T"
+T=$(genesis_fixture)
+OUT=$(printf '%s' "{\"cwd\":\"$T\",\"session_id\":\"s-notify\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":97,\"resets_at\":9999999999}}}" | GENESIS_USAGE_NOTIFY=on "$USCRIPTS/usage-sensor.sh" 2>&1); RC=$?
+check "usage sensor advises cleanly with NOTIFY=on" 0 $RC "$OUT" "/genesis:close"
+rm -rf "$T"
 
 echo
 echo "passed: $PASS  failed: $FAIL"

@@ -9,6 +9,9 @@
 # legitimately too often to nag about. Fails open.
 set -u
 
+# Global kill switch: GENESIS_OFF=1 silences every GENESIS hook.
+[ "${GENESIS_OFF:-}" = "1" ] && exit 0
+
 command -v python3 >/dev/null 2>&1 || exit 0
 
 input=$(cat 2>/dev/null) || exit 0
@@ -36,5 +39,8 @@ except Exception:
 ') || exit 0
 
 [ -n "$result" ] || exit 0
+mode="${GENESIS_G2_CONFIG:-on}"
+[ "$mode" = "off" ] && exit 0
 echo "G2 validation gate (GENESIS): '$result' is a quality-gate config. Fixing the code beats weakening the gate - do not relax rules, skip tests, or lower coverage to get green. If this change is intentional, record it in docs/registry/DECISIONS.md (G6) with the reason." >&2
+[ "$mode" = "warn" ] && exit 0
 exit 2

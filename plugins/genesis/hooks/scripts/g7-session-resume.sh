@@ -8,6 +8,10 @@
 # outside GENESIS projects.
 set -u
 
+# Global kill switch + resume toggle (GENESIS_OFF=1, or GENESIS_RESUME=off).
+[ "${GENESIS_OFF:-}" = "1" ] && exit 0
+[ "${GENESIS_RESUME:-on}" = "off" ] && exit 0
+
 command -v python3 >/dev/null 2>&1 || exit 0
 
 input=$(cat 2>/dev/null) || exit 0

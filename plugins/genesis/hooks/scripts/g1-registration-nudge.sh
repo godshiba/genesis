@@ -6,6 +6,9 @@
 # model; the tool already ran, so nothing is blocked). Fails open.
 set -u
 
+# Global kill switch: GENESIS_OFF=1 silences every GENESIS hook.
+[ "${GENESIS_OFF:-}" = "1" ] && exit 0
+
 command -v python3 >/dev/null 2>&1 || exit 0
 
 input=$(cat 2>/dev/null) || exit 0
@@ -46,5 +49,8 @@ fi
 
 grep -qF "$rel" "$reg" 2>/dev/null && exit 0
 
+mode="${GENESIS_G1:-on}"
+[ "$mode" = "off" ] && exit 0
 echo "G1 registration gate (GENESIS): '$rel' has no row in docs/registry/FILES.md. Add one - unregistered files are invisible." >&2
+[ "$mode" = "warn" ] && exit 0
 exit 2

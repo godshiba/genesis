@@ -105,8 +105,9 @@ required.
 
 ## Optional statusline
 
-A lean one-line readout — `Opus  ctx 38%  5h 91%  7d 62%  main` — with usage
-colored green/yellow/red. It is **opt-in** (only one statusline can be active at
+A lean one-line readout — `Opus  ctx 38%  5h 91% (23m)  7d 62% (3d4h)  main` —
+with usage colored green/yellow/red and a dimmed countdown after each figure
+showing when that window refreshes. It is **opt-in** (only one statusline can be active at
 a time, so the plugin never overrides yours). `/genesis-usage:setup` wires it.
 Deliberately minimal: no tool/agent/todo parsing, no boxes. If you want a full
 HUD, run a dedicated HUD plugin alongside this sensor.

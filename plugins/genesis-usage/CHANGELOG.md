@@ -1,5 +1,14 @@
 # Changelog — genesis-usage
 
+## 0.3.0 — 2026-06-13
+
+Added:
+
+- **Reset countdown in the statusline.** Each usage figure now shows when that
+  window refreshes — `5h 69% (2h14m)  7d 10% (3d4h)` — dimmed, so you can see at
+  a glance how long until the limit clears, not just how much is used. Omitted
+  for implausible reset times (same >8d clamp as the sensor).
+
 ## 0.2.1 — 2026-06-13
 
 Fixed:

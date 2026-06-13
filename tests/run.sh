@@ -206,6 +206,16 @@ OUT=$(printf '%s' "{\"cwd\":\"$T\",\"session_id\":\"s-notify\",\"rate_limits\":{
 check "usage sensor advises cleanly with NOTIFY=on (stubbed, no real notification)" 0 $RC "$OUT" "/genesis:close"
 rm -rf "$T"
 
+echo "== statusline (genesis-usage) =="
+SL="$ROOT/plugins/genesis-usage/statusline/statusline.sh"
+NOWT=$(date +%s)
+OUT=$(printf '%s' "{\"model\":{\"display_name\":\"Opus\"},\"context_window\":{\"used_percentage\":3},\"rate_limits\":{\"five_hour\":{\"used_percentage\":69,\"resets_at\":$(( NOWT + 8040 ))}}}" | bash "$SL" 2>&1); RC=$?
+check "statusline shows 5h usage" 0 $RC "$OUT" "5h 69%"
+check "statusline shows reset countdown" 0 $RC "$OUT" "(2h"
+OUT=$(printf '%s' "{\"model\":{\"display_name\":\"Opus\"},\"rate_limits\":{\"five_hour\":{\"used_percentage\":69,\"resets_at\":9999999999}}}" | bash "$SL" 2>&1); RC=$?
+check "statusline omits absurd reset countdown" 0 $RC "$OUT" "5h 69%"
+printf '%s' "$OUT" | grep -q '(' && { echo "FAIL  statusline should omit absurd countdown"; FAIL=$((FAIL+1)); } || true
+
 echo
 echo "passed: $PASS  failed: $FAIL"
 [ "$FAIL" -eq 0 ]

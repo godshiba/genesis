@@ -1,5 +1,14 @@
 # Changelog — genesis-usage
 
+## 0.2.1 — 2026-06-13
+
+Fixed:
+
+- Reset countdown now shows "reset time unknown" for implausible `resets_at`
+  values (beyond ~8 days) instead of an absurd multi-million-hour countdown.
+- Test suite stubs `osascript` so the notification path is exercised without
+  firing a real desktop notification on the machine running the tests.
+
 ## 0.2.0 — 2026-06-13
 
 Tunability and reach.

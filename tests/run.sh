@@ -161,7 +161,7 @@ check "resume surfaces pre-compaction snapshot" 0 $RC "$OUT" "Pre-compaction sna
 rm -rf "$T"
 
 echo "== usage-sensor (genesis-usage) =="
-FAR=9999999999
+FAR=$(( $(date +%s) + 3600 ))   # realistic reset ~1h out, beyond the grace window
 T=$(genesis_fixture)
 urun usage-sensor.sh "{\"cwd\":\"$T\",\"session_id\":\"s-below\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":40,\"resets_at\":$FAR}}}"
 check "usage sensor silent below threshold" 0 $RC "$OUT" ""
@@ -198,9 +198,12 @@ T=$(genesis_fixture)
 OUT=$(printf '%s' "{\"cwd\":\"$T\",\"tool_input\":{\"file_path\":\"$T/src/new-thing.ts\"}}" | GENESIS_G1=warn "$SCRIPTS/g1-registration-nudge.sh" 2>&1); RC=$?
 check "G1 warn advises without exit 2" 0 $RC "$OUT" "G1 registration gate"
 rm -rf "$T"
+# Stub osascript on PATH so the notify path is exercised WITHOUT firing a real
+# desktop notification on the host running the tests.
+mkdir -p "$TMPDIR/fakebin"; printf '#!/bin/sh\nexit 0\n' > "$TMPDIR/fakebin/osascript"; chmod +x "$TMPDIR/fakebin/osascript"
 T=$(genesis_fixture)
-OUT=$(printf '%s' "{\"cwd\":\"$T\",\"session_id\":\"s-notify\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":97,\"resets_at\":9999999999}}}" | GENESIS_USAGE_NOTIFY=on "$USCRIPTS/usage-sensor.sh" 2>&1); RC=$?
-check "usage sensor advises cleanly with NOTIFY=on" 0 $RC "$OUT" "/genesis:close"
+OUT=$(printf '%s' "{\"cwd\":\"$T\",\"session_id\":\"s-notify\",\"rate_limits\":{\"five_hour\":{\"used_percentage\":97,\"resets_at\":$FAR}}}" | PATH="$TMPDIR/fakebin:$PATH" GENESIS_USAGE_NOTIFY=on "$USCRIPTS/usage-sensor.sh" 2>&1); RC=$?
+check "usage sensor advises cleanly with NOTIFY=on (stubbed, no real notification)" 0 $RC "$OUT" "/genesis:close"
 rm -rf "$T"
 
 echo

@@ -64,7 +64,11 @@ def window(name, thresh):
     resets = num(w.get("resets_at"))
     if resets is not None and (resets - now) <= grace:
         return None
-    eta = int(resets - now) if (resets is not None and resets > now) else None
+    # Sane eta only: a 5h window resets within 5h, a 7d within 7d. Anything
+    # beyond ~8 days is garbage or sentinel data - show "reset time unknown"
+    # rather than an absurd countdown.
+    delta = (resets - now) if resets is not None else None
+    eta = int(delta) if (delta is not None and 0 < delta <= 8 * 24 * 3600) else None
     return {"used": used, "eta": eta}
 
 w5 = window("five_hour", th5)

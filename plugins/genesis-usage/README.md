@@ -105,9 +105,10 @@ required.
 
 ## Optional statusline
 
-A lean one-line readout — `Opus  ctx 38%  5h 91% (23m)  7d 62% (3d4h)  main` —
+A lean one-line readout — `<model>  ctx 38%  5h 91% (23m)  7d 62% (3d4h)  <branch>` —
 with usage colored green/yellow/red and a dimmed countdown after each figure
-showing when that window refreshes. It is **opt-in** (only one statusline can be active at
+showing when that window refreshes. The first field is whatever model you are
+running; the last is your current git branch. It is **opt-in** (only one statusline can be active at
 a time, so the plugin never overrides yours). `/genesis-usage:setup` wires it.
 Deliberately minimal: no tool/agent/todo parsing, no boxes. If you want a full
 HUD, run a dedicated HUD plugin alongside this sensor.

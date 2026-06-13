@@ -143,11 +143,12 @@ A session ends two ways, and the loop covers both:
   next session, and `/genesis:close` clears it once a real handoff replaces it.
   Fully automatic — you run nothing.
 - **The usage cap (5-hour or weekly) is hit** and Claude Code stops abruptly.
-  That gauge is not exposed to hooks, so there is no automatic trigger — *you*
-  are the sensor. When `/usage` shows the cap nearing, run **`/genesis:close`**:
-  its emergency mode records exactly where mid-task work sits and stops, so the
-  next session (after the reset) resumes from the handoff instead of stranded,
-  unrecorded work.
+  The base genesis plugin does not read that gauge, so *you* are the sensor:
+  when `/usage` shows the cap nearing, run **`/genesis:close`** — its emergency
+  mode records exactly where mid-task work sits and stops, so the next session
+  (after the reset) resumes from the handoff. Want it automatic? The companion
+  **genesis-usage** plugin reads the usage gauge and warns (or auto-closes) for
+  you — see below.
 
 ## Configuration
 

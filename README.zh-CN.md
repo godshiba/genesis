@@ -119,6 +119,42 @@ lint 配置时会触发配置卫兵（修代码胜过放水门禁）。项目相
 上次交接、下一个路线图任务、未关闭的问题，在你打第一个字之前就已注入。
 实际效果见 [EXAMPLES.md](./EXAMPLES.md)。
 
+### 6. 挺过两种中断
+
+会话有两种结束方式，闭环都覆盖：
+
+- **上下文窗口被填满**，Claude Code 把对话压缩成有损摘要。压缩前钩子会先
+  触发，把工作树状态写入 `docs/registry/.session-snapshot.md`；下一个会话由
+  恢复钩子呈现，一旦有了正式交接，`/genesis:close` 便将其清除。完全自动 —
+  你什么都不用做。
+- **撞上用量上限（5 小时或每周）**，Claude Code 会突然停止。基础的 genesis
+  插件不读取该指标，所以你就是传感器：当 `/usage` 显示接近上限时，运行
+  **`/genesis:close`** — 它的应急模式会准确记录半截工作停在哪里并停止，让
+  下一个会话（在限额重置后）从交接处继续。想要自动？配套的 **genesis-usage**
+  插件会读取用量指标，替你预警（或自动收尾）— 见下文。
+
+## 配置
+
+GENESIS 默认带着全部牙齿 — 但每道门禁都有强度旋钮，让你调它而不是卸载整个
+插件。通过环境变量设置：**全局**写在 `~/.claude/settings.json` 的 `"env"`
+块，或**按项目**写在该仓库的 `.claude/settings.json`（在那里会覆盖全局值）。
+
+| 变量 | 取值 | 默认 | 控制什么 |
+|------|------|------|----------|
+| `GENESIS_G7` | `on` / `warn` / `off` | `on` | 会话门禁。`on` 会阻断改了代码却没写 `SESSION_LOG` 的回合；`warn` 只提醒不阻断。 |
+| `GENESIS_G1` | `on` / `warn` / `off` | `on` | 未登记文件提醒。 |
+| `GENESIS_G3` | `on` / `warn` / `off` | `on` | 孤儿 TODO/FIXME 提醒。 |
+| `GENESIS_G2_CONFIG` | `on` / `warn` / `off` | `on` | 质量配置卫兵（编辑 eslint/vitest 等）。 |
+| `GENESIS_G2` | `on` / `off` | `on` | 提交前的验证提醒。 |
+| `GENESIS_PRECOMPACT` | `on` / `off` | `on` | 压缩前快照。 |
+| `GENESIS_RESUME` | `on` / `off` | `on` | 会话恢复上下文加载器。 |
+| `GENESIS_OFF` | `1` | 未设置 | 总开关 — 让所有 GENESIS 钩子静默。 |
+
+`warn` 保留同样的提示信息，但绝不阻断或打断（退出码 0）。默认完整保留全部
+教义；把某道门禁调弱是一个深思熟虑的选择 — 而把原因记进 `DECISIONS.md`
+正是 G6 门禁在发挥作用。配套插件 **genesis-usage** 有自己的旋钮（阈值、
+模式、通知）。
+
 ## 适合谁
 
 **Claude Code 新手：** 安装、运行 `/genesis:init`、回答问题。你会得到一个
@@ -150,10 +186,24 @@ plugins/genesis/
 ├── agents/              gate-auditor, genesis-architect, doc-curator
 └── hooks/               G7 会话卫兵（阻断）+ 会话恢复加载器 + 压缩前快照,
                          G1/G3 提醒, G2 提交提醒 + 配置卫兵
-tests/run.sh             钩子测试套件（30 个场景，在 CI 中运行）
+plugins/genesis-usage/   配套插件（见下文）
+tests/run.sh             钩子测试套件（42 个场景，在 CI 中运行）
 EXAMPLES.md              端到端的真实生成输出
 CHANGELOG.md             版本历史
 ```
+
+## 配套：genesis-usage
+
+本市场中一个独立、可选的插件 — **一个传感器，而非 HUD**。它读取 Claude Code
+在 stdin 上提供的订阅用户 `rate_limits`（5 小时和每周两个窗口），当你接近
+上限而重置还很远时，建议 — 或直接触发 — `/genesis:close`，让会话以干净的
+交接收尾，而不是被硬生生切断。它是 G7 应急收尾的另一半。单独安装：
+
+```text
+/plugin install genesis-usage@godshiba
+```
+
+详情见 [plugins/genesis-usage/README.md](./plugins/genesis-usage/README.md)。
 
 ## 许可证
 

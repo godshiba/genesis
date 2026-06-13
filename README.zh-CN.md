@@ -148,9 +148,9 @@ plugins/genesis/
 ├── skills/              init, docs, status, gate-check, close, landmine,
 │                        decision, issue, learn
 ├── agents/              gate-auditor, genesis-architect, doc-curator
-└── hooks/               G7 会话卫兵（阻断）+ 会话恢复加载器,
+└── hooks/               G7 会话卫兵（阻断）+ 会话恢复加载器 + 压缩前快照,
                          G1/G3 提醒, G2 提交提醒 + 配置卫兵
-tests/run.sh             钩子测试套件（26 个场景，在 CI 中运行）
+tests/run.sh             钩子测试套件（30 个场景，在 CI 中运行）
 EXAMPLES.md              端到端的真实生成输出
 CHANGELOG.md             版本历史
 ```

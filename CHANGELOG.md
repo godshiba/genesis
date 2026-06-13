@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.4.0 — 2026-06-13
+
+The cutoff-survival release. Completes the G7 loop for both ways a session
+ends: the context window filling, and the usage cap being hit.
+
+Added:
+
+- **Pre-compaction snapshot hook (PreCompact).** Just before Claude Code
+  compacts a long conversation into a lossy summary, a mechanical breadcrumb of
+  repo state (branch, HEAD, uncommitted files) is written to
+  `docs/registry/.session-snapshot.md`. If the session then ends mid-task
+  before a proper close, the resume hook surfaces it next session so nothing
+  about the working tree is lost across the compaction boundary. Fails open.
+- **Emergency mode for `/genesis:close`.** The 5-hour and weekly rate-limit
+  gauges are not exposed to hooks, so there is no automatic trigger — you are
+  the sensor. When `/usage` shows the cap nearing, `/genesis:close` now has a
+  fast path: capture exactly where mid-task work sits, append the SESSION_LOG
+  handoff, and stop — without spending the remaining budget settling the tree.
+
+Changed:
+
+- **Resume loader** surfaces `.session-snapshot.md` when present (and
+  `/genesis:close` deletes it once a real handoff supersedes it) — a symmetric
+  write/read/supersede loop alongside the existing SESSION_LOG handoff.
+- **Doctrine and template** now carry the two-cutoff model and a sharper
+  delegation discipline: delegate read-heavy work to subagents to preserve the
+  main context window, work in small batches, and checkpoint between them so a
+  cutoff loses at most one batch. Propagated into every generated CLAUDE.md.
+- Hook test suite expanded to 30 scenarios (snapshot write, fail-open, and
+  resume surfacing).
+
 ## 1.3.0 — 2026-06-12
 
 The trust release: mechanical beats instructional, applied to the plugin

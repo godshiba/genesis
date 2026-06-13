@@ -94,6 +94,21 @@ intentionally identical — read one example, apply to all.
 **Resume protocol:** SESSION_LOG.md top entry, then ROADMAP.md first unchecked
 task. Continue from there.
 
+## Delegation & Session Limits
+
+- **Delegate read-heavy work** (searching the tree, surveying prior art,
+  multi-file audits, multi-perspective reviews) to subagents — they spend their
+  own context window on the reading and return only the conclusion. Direct work
+  when files are small and tightly coupled.
+- **Small batches.** Split large tasks into independently shippable units; do
+  one at a time and update SESSION_LOG between batches, so a cutoff loses at
+  most one batch. Order batches by dependency, then risk.
+- **Two cutoffs.** When the context fills, a PreCompact hook auto-snapshots the
+  tree to `docs/registry/.session-snapshot.md` (the resume hook surfaces it;
+  `/genesis:close` clears it). The usage cap (5h/weekly) has no auto-trigger —
+  watch `/usage`, and when it nears, run `/genesis:close` to capture mid-task
+  state before the hard stop.
+
 ## Workflow
 
 - Conventional commits ({{COMMIT_TYPES}}), one logical change per commit.

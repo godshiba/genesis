@@ -122,6 +122,27 @@ run g2-config-guard.sh '{"cwd":"/tmp","tool_input":{"file_path":"/tmp/.eslintrc.
 check "config guard silent outside GENESIS" 0 $RC "$OUT" ""
 rm -rf "$T"
 
+echo "== g7-precompact-snapshot =="
+T=$(genesis_fixture)
+echo wip > "$T/src/wip.txt"
+run g7-precompact-snapshot.sh "{\"cwd\":\"$T\",\"trigger\":\"auto\"}"
+check "precompact exits silently" 0 $RC "$OUT" ""
+SNAP="$T/docs/registry/.session-snapshot.md"
+if [ -f "$SNAP" ] && grep -q "Pre-compaction snapshot" "$SNAP" && grep -q "src/wip.txt" "$SNAP"; then
+  echo "ok    precompact writes snapshot with dirty files"; PASS=$((PASS+1))
+else
+  echo "FAIL  precompact snapshot missing or incomplete"; FAIL=$((FAIL+1))
+fi
+run g7-precompact-snapshot.sh '{"cwd":"/tmp","trigger":"auto"}'
+check "precompact silent outside GENESIS" 0 $RC "$OUT" ""
+rm -rf "$T"
+# resume loader surfaces the snapshot when present (mid-task safety net)
+T=$(genesis_fixture)
+printf '# Pre-compaction snapshot\n\n- Branch: main\n- HEAD: abc123 wip\n' > "$T/docs/registry/.session-snapshot.md"
+run g7-session-resume.sh "{\"cwd\":\"$T\",\"hook_event_name\":\"SessionStart\"}"
+check "resume surfaces pre-compaction snapshot" 0 $RC "$OUT" "Pre-compaction snapshot present"
+rm -rf "$T"
+
 echo
 echo "passed: $PASS  failed: $FAIL"
 [ "$FAIL" -eq 0 ]

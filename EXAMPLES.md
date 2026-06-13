@@ -91,6 +91,47 @@ genesis entry; `FILES.md` got a row for every scaffold file.
 
 [turn ends with changed code, session log untouched]
   -> G7 (blocks): append the handoff entry - /genesis:close does this.
+
+[context window fills, Claude Code is about to compact the conversation]
+  -> pre-compaction hook: writes docs/registry/.session-snapshot.md
+     (branch, HEAD, every uncommitted file) before detail is summarized away.
+```
+
+## When a session is about to be cut off
+
+Two cutoffs end a session; GENESIS keeps both resumable.
+
+**Context fills (automatic).** Just before Claude Code compacts a long
+conversation, the pre-compaction hook writes a breadcrumb to
+`docs/registry/.session-snapshot.md`:
+
+```markdown
+# Pre-compaction snapshot (mechanical, auto-written by GENESIS)
+
+Written 2026-06-13T11:42:08Z just before a auto context compaction.
+This is a breadcrumb, not a handoff. If you see it on resume, the last
+session may have ended mid-task before /genesis:close ran.
+
+- Branch: feat/persist
+- HEAD: a1b2c3d Phase 1 complete
+- Uncommitted changes:
+    M  src/persist/store.ts
+    ?? src/persist/store.test.ts
+```
+
+If the session survives, you keep working. If it dies, the resume hook surfaces
+this next session so the working tree is never silently lost.
+
+**Usage cap hit (you trigger it).** The 5-hour and weekly limits are not exposed
+to hooks, so there is no auto-trigger — you watch `/usage`. When the cap nears,
+run `/genesis:close`; its emergency mode captures where mid-task work sits and
+stops, without spending the last of your budget settling the tree:
+
+```text
+/genesis:close   (with /usage near the cap)
+  -> records: src/persist/store.ts half-written, atomic-write path TODO,
+     next = finish writeAtomic() then wire store.test.ts (ROADMAP p2 t1)
+  -> appends SESSION_LOG handoff, stops. Resumes cleanly after the reset.
 ```
 
 ## What the next session sees

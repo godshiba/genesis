@@ -24,6 +24,18 @@
         ]
       }
     ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/g7-precompact-snapshot.sh",
+            "timeout": 10,
+            "statusMessage": "GENESIS G7 pre-compaction snapshot"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",

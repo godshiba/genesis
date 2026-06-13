@@ -30,6 +30,15 @@ try:
 
     parts = []
 
+    snap = read(".session-snapshot.md")
+    if snap.strip():
+        s = snap.strip()
+        if len(s) > 700:
+            s = s[:700] + " [...]"
+        parts.append("Pre-compaction snapshot present - the last session may "
+                     "have ended mid-task before a proper close. Reconcile it "
+                     "against the handoff below, then continue:\n" + s)
+
     log = read("SESSION_LOG.md")
     m = re.search(r"^## (.+)$", log, re.M)
     if m:

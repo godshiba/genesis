@@ -173,9 +173,10 @@ plugins/genesis/
 ├── skills/              init, docs, status, gate-check, close, landmine,
 │                        decision, issue, learn
 ├── agents/              gate-auditor, genesis-architect, doc-curator
-└── hooks/               страж сессии G7 (блокирующий) + загрузчик возобновления,
-                         подсказки G1/G3, напоминание G2 + страж конфигов
-tests/run.sh             тесты хуков (26 сценариев, гоняются в CI)
+└── hooks/               страж сессии G7 (блокирующий) + загрузчик возобновления
+                         + снимок перед сжатием контекста, подсказки G1/G3,
+                         напоминание G2 + страж конфигов
+tests/run.sh             тесты хуков (30 сценариев, гоняются в CI)
 EXAMPLES.md              реальный результат генерации, от и до
 CHANGELOG.md             история версий
 ```

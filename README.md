@@ -114,10 +114,12 @@ mechanical ones: G7 **blocks** ending a turn that changed code without
 touching the session log; G1 and G3 nudge on unregistered files and orphan
 TODOs; G2's obligation is injected before every git commit, and a config
 guard fires when a test or lint config is edited (fixing code beats weakening
-gates). The project-specific checks (running your check command, auditing the
-doc-sync map) live in `gate-check` and `close`. The judgment calls (G5, G6)
-are probed by the `gate-auditor` agent, which flags probable misses rather
-than pretending grep can detect a decision.
+gates). A pre-compaction hook snapshots the working tree before Claude Code
+compacts a long conversation, so nothing is lost across that boundary. The
+project-specific checks (running your check command, auditing the doc-sync
+map) live in `gate-check` and `close`. The judgment calls (G5, G6) are probed
+by the `gate-auditor` agent, which flags probable misses rather than
+pretending grep can detect a decision.
 
 Generated projects also carry a four-rule **Conduct** section (derived from
 Karpathy's LLM-pitfall guidelines): surface assumptions, simplicity first,
@@ -130,6 +132,22 @@ slogans.
 automatically** when the next session starts — last handoff, next roadmap
 task, open issues, injected before you type a word. See it in
 [EXAMPLES.md](./EXAMPLES.md#what-the-next-session-sees).
+
+### 6. Surviving the two cutoffs
+
+A session ends two ways, and the loop covers both:
+
+- **The context window fills** and Claude Code compacts the conversation into a
+  lossy summary. The pre-compaction hook fires first, writing the working-tree
+  state to `docs/registry/.session-snapshot.md`; the resume hook surfaces it
+  next session, and `/genesis:close` clears it once a real handoff replaces it.
+  Fully automatic — you run nothing.
+- **The usage cap (5-hour or weekly) is hit** and Claude Code stops abruptly.
+  That gauge is not exposed to hooks, so there is no automatic trigger — *you*
+  are the sensor. When `/usage` shows the cap nearing, run **`/genesis:close`**:
+  its emergency mode records exactly where mid-task work sits and stops, so the
+  next session (after the reset) resumes from the handoff instead of stranded,
+  unrecorded work.
 
 ## Who this is for
 
@@ -163,9 +181,10 @@ plugins/genesis/
 ├── skills/              init, docs, status, gate-check, close, landmine,
 │                        decision, issue, learn
 ├── agents/              gate-auditor, genesis-architect, doc-curator
-└── hooks/               G7 session guard (blocking) + session-resume loader,
-                         G1/G3 nudges, G2 commit reminder + config guard
-tests/run.sh             hook test suite (26 scenarios, runs in CI)
+└── hooks/               G7 session guard (blocking) + session-resume loader +
+                         pre-compaction snapshot, G1/G3 nudges,
+                         G2 commit reminder + config guard
+tests/run.sh             hook test suite (30 scenarios, runs in CI)
 EXAMPLES.md              real generated output, end to end
 CHANGELOG.md             release history
 ```

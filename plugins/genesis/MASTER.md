@@ -49,8 +49,9 @@ LAYER 3 — AUTOMATION    the plugin's skills, agents, and hooks.
                           :issue, :learn — the daily habit loop
                         gate-auditor, genesis-architect, doc-curator —
                           delegable agents
-                        hooks — G7 guard (blocks) + session-resume loader,
-                          G1/G3 nudges, G2 commit reminder + config guard
+                        hooks — G7 guard (blocks) + session-resume loader +
+                          pre-compaction snapshot, G1/G3 nudges,
+                          G2 commit reminder + config guard
 ```
 
 The split matters: doctrine changes rarely, templates evolve as you learn,
@@ -208,6 +209,16 @@ spawn N agents with disjoint file scopes, explicit doc citations, a named test
 framework, a required build/test run, and a required structured report. Then
 integrate and reconcile drift.
 
+Two economies make delegation pay. **Small batches**: split a large task into
+the smallest independently shippable units, do them one batch at a time, and
+update SESSION_LOG between batches — so a cutoff loses at most one batch, never
+the whole task. **Context preserved**: read-heavy work (searching the tree,
+surveying prior art, multi-file audits, distinct-perspective reviews) is the
+first thing to delegate — a subagent burns its own window on the reading and
+returns only the conclusion, keeping the main window free for the work that
+needs the accumulated context. Prioritize batches by dependency then risk: do
+what unblocks the most, and what is riskiest to discover late, first.
+
 ---
 
 ## 8. Session Continuity and Limits
@@ -221,6 +232,19 @@ integrate and reconcile drift.
   unchecked task). That pair is the whole handoff — and the session-resume
   hook injects it automatically at session start, so the loop closes without
   relying on anyone remembering to read.
+
+Two cutoffs end a session, and the loop covers both:
+
+- **The context window fills** and Claude Code compacts the conversation into a
+  lossy summary. The PreCompact hook writes a mechanical repo-state breadcrumb
+  to `docs/registry/.session-snapshot.md` first, so nothing about the working
+  tree is lost across the boundary; the resume hook surfaces it, and
+  `/genesis:close` deletes it once a real handoff supersedes it. Automatic.
+- **The usage cap (5-hour or weekly) is hit** and Claude Code stops abruptly.
+  That gauge is not exposed to hooks, so there is no automatic trigger — you
+  are the sensor: watch `/usage`, and when the cap nears, interrupt and run
+  `/genesis:close` in its emergency mode (capture mid-task state, do not settle
+  the tree, stop). A mid-task handoff beats a hard cutoff with no record.
 
 ---
 

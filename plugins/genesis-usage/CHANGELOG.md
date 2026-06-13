@@ -1,5 +1,22 @@
 # Changelog — genesis-usage
 
+## 1.0.0 — 2026-06-13
+
+First stable release. The usage sensor is feature-complete and polished.
+
+What 1.0 includes:
+
+- **Sensor** (Stop hook) reads subscriber `rate_limits` and, near a cap with the
+  reset still far off, warns (`advise`) or auto-runs `/genesis:close`
+  (`enforce`). Throttled per rising 5-point bucket; fails open for API users.
+- **Statusline** (opt-in) shows model, context %, and 5h/7d usage — each with a
+  reset countdown, color-coded.
+- **Desktop notifications** (`GENESIS_USAGE_NOTIFY`) for the away-from-terminal
+  case, no menu-bar app required.
+- **Fully tunable** — caps (5h/7d), mode, grace, notifications — via interactive
+  `/genesis-usage:setup` or env vars, global or per-project. Honors `GENESIS_OFF`.
+- READMEs in English, Chinese, and Russian. Covered by the repo test suite.
+
 ## 0.3.1 — 2026-06-13
 
 Fixed:
